@@ -1,0 +1,4 @@
+include pytestdelta/VERSION
+include pytestdelta/py.typed
+include requirements/requirements.txt
+include LICENSE

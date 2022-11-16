@@ -1,0 +1,50 @@
+name: pytest-delta
+
+envs:
+  PACKAGE_NAME: pytest_delta
+
+install:
+  run:
+    - pip install -U -r requirements/requirements.txt -r requirements/dev-requirements.txt
+    - pip install -e .
+    - pre-commit install
+
+uninstall:
+  run:
+    - pip uninstall pytest-delta -y
+    - pip freeze | xargs pip uninstall -y
+    - pip install lume
+
+steps:
+  reinstall:
+    run:
+      - lume -uninstall
+      - lume -install
+  clean:
+    run:
+    - rm -rf *.egg-info
+    - rm -rf .*_cache
+    - find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
+  lint:
+    run:
+      - black --check $PACKAGE_NAME tests
+      - flake8 $PACKAGE_NAME tests
+      - pyupgrade --py37-plus `find $PACKAGE_NAME tests -name "*.py" -type f`
+      - isort $PACKAGE_NAME tests
+  check-requirements:
+    run: safety check -r requirements/requirements.txt
+  static-analysis:
+    run: mypy $PACKAGE_NAME
+  coverage:
+    run: pytest -c pytest.coverage.ini
+  test:
+    run: pytest -v
+  docs:
+    run: | 
+      pip install -r requirements/docs-requirements.txt
+      mkdocs build
+  check-no-binary-installation:
+    run: |
+      pip install wheel
+      python setup.py sdist
+      pip wheel --no-binary $PACKAGE_NAME -w /tmp/ext dist/$PACKAGE_NAME-*.tar.gz
