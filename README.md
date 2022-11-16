@@ -1,4 +1,4 @@
-# pytest delta
+# pytest-delta
 
 [![version](https://img.shields.io/github/release/alice-biometrics/pytestdelta/all.svg)](https://github.com/alice-biometrics/pytestdelta/releases) 
 [![ci](https://github.com/alice-biometrics/pytestdelta/workflows/ci/badge.svg)](https://github.com/alice-biometrics/pytestdelta/actions) 
